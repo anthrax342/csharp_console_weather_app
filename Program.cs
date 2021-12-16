@@ -19,6 +19,7 @@ namespace wetter_app_neu_console
             HttpResponseMessage httpResponse = client.GetAsync(requesturl).Result;
             if(client.GetAsync(requesturl).Result.IsSuccessStatusCode == false)
             {
+                Console.Clear();
                 Console.WriteLine("Eingabefehler, bitte versuchen Sie es erneut");
                 Main(args);
             }
@@ -28,7 +29,7 @@ namespace wetter_app_neu_console
                 WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
                 Console.WriteLine("In " + city + " ist es " + weatherMapResponse.Main.Temp + "°C");
             }
-            Console.WriteLine("\n E drücken zum verlassen, oder R zum wiederholen.");
+            Console.WriteLine("\nE drücken zum verlassen, oder R zum wiederholen.");
             ConsoleKey key;
             do
             {
@@ -39,6 +40,7 @@ namespace wetter_app_neu_console
                 }
                 else if (key == ConsoleKey.R)
                     {
+                        Console.Clear();
                         Main(args);
                     }
             } while (true);
@@ -60,7 +62,17 @@ namespace wetter_app_neu_console
         public float Temp
         {
             get { return temp; }
-            set { temp = value; }
+            set { 
+                    temp = value; 
+                    if(temp >= 35)
+                    {
+                        Console.WriteLine("\nGanz schön warm \n");
+                    }
+                    if(temp <= 0)
+                    {
+                    Console.WriteLine("\nGanz schön kalt \n");
+                    }
+                }
         }
     }
 }
