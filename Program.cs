@@ -12,7 +12,8 @@ namespace wetter_app_neu_console
     {   
         static void Main(string[] args)
         {
-            Console.WriteLine("Bitte Trage eine Stadt ein:");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Please enter a city: ");
             string city = Console.ReadLine();
             HttpClient client = new HttpClient();
             string requesturl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=7acf7e9cd7f56789fe7911d6576444c8&units=metric";
@@ -20,16 +21,27 @@ namespace wetter_app_neu_console
             if(client.GetAsync(requesturl).Result.IsSuccessStatusCode == false)
             {
                 Console.Clear();
-                Console.WriteLine("Eingabefehler, bitte versuchen Sie es erneut");
+                Console.WriteLine("Input error, please try again ");
                 Main(args);
             }
             else
             {
                 string response = httpResponse.Content.ReadAsStringAsync().Result;
                 WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
-                Console.WriteLine("In " + city + " " + "`" +weatherMapResponse.Sys.Country + "`" + " ist es " + weatherMapResponse.Main.Temp + "°C");
+                Console.Clear();
+                Console.WriteLine("In " + city + " " + "`" + weatherMapResponse.Sys.Country + "`" + " it´s " + 
+                weatherMapResponse.Main.Temp + "°C; " + "feels like " + weatherMapResponse.Main.Feels_like + 
+                "°C; " + "the sea level is " + weatherMapResponse.Main.Sea_level + "m \n");
+                if (weatherMapResponse.Main.Temp >= 30)
+                {
+                    Console.WriteLine("\nNice and warm(: \n");
+                }
+                if (weatherMapResponse.Main.Temp <= 0)
+                {
+                    Console.WriteLine("\nIt's pretty cold  (: \n");
+                }
             }
-            Console.WriteLine("\nE drücken zum verlassen; R zum wiederholen.");
+            Console.WriteLine("\nPress E to exit; R to repeat. ");
             ConsoleKey key;
             do
             {
@@ -49,7 +61,7 @@ namespace wetter_app_neu_console
     class WeatherMapResponse
     {
         private Main main;
-        private Sys sys; 
+        private Sys sys;
         public Main Main
         {
             get { return main; }
@@ -66,20 +78,24 @@ namespace wetter_app_neu_console
     class Main
     {
         private float temp;
+        private float feels_like;
+        private float sea_level;
         public float Temp
         {
             get { return temp; }
-            set { 
-                    temp = value; 
-                    if(temp >= 30)
-                    {
-                        Console.WriteLine("\nGanz schön warm (: \n");
-                    }
-                    if(temp <= 0)
-                    {
-                    Console.WriteLine("\nGanz schön kalt (: \n");
-                    }
-                }
+            set { temp = value; }
+            
+
+            }
+        public float Feels_like
+        {
+            get { return feels_like; }
+            set { feels_like = value; }
+        }
+        public float Sea_level
+        {
+            get { return sea_level; }
+            set { sea_level = value; }
         }
     }
     class Sys
