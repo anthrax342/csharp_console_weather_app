@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace wetter_app_neu_console
 {
     internal class Program
-    {
+    {   
         static void Main(string[] args)
         {
             Console.WriteLine("Bitte Trage eine Stadt ein:");
@@ -27,9 +27,9 @@ namespace wetter_app_neu_console
             {
                 string response = httpResponse.Content.ReadAsStringAsync().Result;
                 WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
-                Console.WriteLine("In " + city + " ist es " + weatherMapResponse.Main.Temp + "°C");
+                Console.WriteLine("In " + city + " " + "`" +weatherMapResponse.Sys.Country + "`" + " ist es " + weatherMapResponse.Main.Temp + "°C");
             }
-            Console.WriteLine("\nE drücken zum verlassen, oder R zum wiederholen.");
+            Console.WriteLine("\nE drücken zum verlassen; R zum wiederholen.");
             ConsoleKey key;
             do
             {
@@ -49,11 +49,18 @@ namespace wetter_app_neu_console
     class WeatherMapResponse
     {
         private Main main;
+        private Sys sys; 
         public Main Main
         {
             get { return main; }
             set
             { main = value; }
+        }
+        public Sys Sys
+        {
+            get { return sys; }
+            set
+            { sys = value; }
         }
     }
     class Main
@@ -64,15 +71,24 @@ namespace wetter_app_neu_console
             get { return temp; }
             set { 
                     temp = value; 
-                    if(temp >= 35)
+                    if(temp >= 30)
                     {
-                        Console.WriteLine("\nGanz schön warm \n");
+                        Console.WriteLine("\nGanz schön warm (: \n");
                     }
                     if(temp <= 0)
                     {
-                    Console.WriteLine("\nGanz schön kalt \n");
+                    Console.WriteLine("\nGanz schön kalt (: \n");
                     }
                 }
+        }
+    }
+    class Sys
+    {
+        private string country;
+        public string Country
+        {
+            get { return country; }
+            set { country = value; }
         }
     }
 }
