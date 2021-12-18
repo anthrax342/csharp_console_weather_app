@@ -29,16 +29,17 @@ namespace wetter_app_neu_console
                 string response = httpResponse.Content.ReadAsStringAsync().Result;
                 WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
                 Console.Clear();
-                Console.WriteLine("In " + city + " " + "`" + weatherMapResponse.Sys.Country + "`" + " it´s " + 
+                Console.WriteLine("In " + weatherMapResponse.Name + " " + "`" + weatherMapResponse.Sys.Country + "`" + " it´s " + 
                 weatherMapResponse.Main.Temp + "°C; " + "feels like " + weatherMapResponse.Main.Feels_like + 
                 "°C; " + "the sea level is " + weatherMapResponse.Main.Sea_level + "m \n");
+                Console.WriteLine("Weather condition: " + weatherMapResponse.Weather[0].Description);
                 if (weatherMapResponse.Main.Temp >= 30)
                 {
-                    Console.WriteLine("\nNice and warm(: \n");
+                    Console.WriteLine("\nNice and warm(: ");
                 }
                 if (weatherMapResponse.Main.Temp <= 0)
                 {
-                    Console.WriteLine("\nIt's pretty cold  (: \n");
+                    Console.WriteLine("\nIt's pretty cold  (: ");
                 }
             }
             Console.WriteLine("\nPress E to exit; R to repeat. ");
@@ -62,17 +63,27 @@ namespace wetter_app_neu_console
     {
         private Main main;
         private Sys sys;
+        private string name;
+        private List<Weather> weather;
         public Main Main
         {
             get { return main; }
-            set
-            { main = value; }
+            set { main = value; }
         }
         public Sys Sys
         {
             get { return sys; }
-            set
-            { sys = value; }
+            set { sys = value; }
+        }
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+        public List<Weather> Weather
+        {
+            get { return weather; }
+            set { weather = value; }
         }
     }
     class Main
@@ -105,6 +116,15 @@ namespace wetter_app_neu_console
         {
             get { return country; }
             set { country = value; }
+        }
+    }
+    class Weather
+    {
+        private string description;
+        public string Description
+        {
+            get { return description; }
+            set { description = value; }
         }
     }
 }
