@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Spectre.Console;
 
 namespace wetter_app_neu_console
 {
@@ -12,8 +13,19 @@ namespace wetter_app_neu_console
     {   
         static void Main(string[] args)
         {
+            System.Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Title = "Weather App by anthrax3 | c -1.5";
+            string title = @"
+              _   ____  
+  ___        / | | ___| 
+ / __|  _____| | |___ \ 
+| (__  |_____| |_ ___) |
+ \___|       |_(_)____/ 
+                        
+                        ";
+            Console.WriteLine(title);
+            AnsiConsole.Markup("[rapidblink blue]Please enter a city[/][rapidblink]:[/] \n");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Please enter a city: ");
             string city = Console.ReadLine();
             HttpClient client = new HttpClient();
             string requesturl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=7acf7e9cd7f56789fe7911d6576444c8&units=metric";
@@ -21,7 +33,7 @@ namespace wetter_app_neu_console
             if(client.GetAsync(requesturl).Result.IsSuccessStatusCode == false)
             {
                 Console.Clear();
-                Console.WriteLine("Input error, please try again ");
+                AnsiConsole.Markup("[underline red]Input error, please try again[/]\n");
                 Main(args);
             }
             else
@@ -29,17 +41,20 @@ namespace wetter_app_neu_console
                 string response = httpResponse.Content.ReadAsStringAsync().Result;
                 WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("In " + weatherMapResponse.Name + " " + "`" + weatherMapResponse.Sys.Country + "`" + " it´s " + 
                 weatherMapResponse.Main.Temp + "°C; " + "feels like " + weatherMapResponse.Main.Feels_like + 
                 "°C; " + "the sea level is " + weatherMapResponse.Main.Sea_level + "m \n");
                 Console.WriteLine("Weather condition: " + weatherMapResponse.Weather[0].Description);
                 if (weatherMapResponse.Main.Temp >= 30)
                 {
-                    Console.WriteLine("\nNice and warm(: ");
+                    var warm = "\nNice and warm " + Emoji.Known.Sun;
+                    AnsiConsole.MarkupLine(warm);
                 }
                 if (weatherMapResponse.Main.Temp <= 0)
                 {
-                    Console.WriteLine("\nIt's pretty cold  (: ");
+                    var cold = "\nIt´s pretty cold " + Emoji.Known.Snowflake;
+                    AnsiConsole.MarkupLine(cold);
                 }
             }
             Console.WriteLine("\nPress E to exit; R to repeat. ");
