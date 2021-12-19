@@ -15,19 +15,12 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -1.7";
+            Console.Title = "Weather App by anthrax3 | c -1.8";
             var image = new CanvasImage("logo-c-sharp.png");
             image.MaxWidth(16);
             AnsiConsole.Write(image);
-            string title = @"
-              _  _____ 
-  ___        / ||___  |
- / __|  _____| |   / / 
-| (__  |_____| |_ / /  
- \___|       |_(_)_/   
-                           
-                        ";
-            Console.WriteLine(title);
+            var font = FigletFont.Load("3D-ASCII.flf");
+            AnsiConsole.Write(new FigletText(font,"c -1.8").LeftAligned().Color(Color.Red));
             AnsiConsole.Markup("[italic green]current date: [/]");
             Console.WriteLine(System.DateTime.Now.ToString("dd.MM.yyyy"));
             AnsiConsole.Markup("[rapidblink blue]Please enter a city[/][rapidblink]:[/] \n");
@@ -52,10 +45,24 @@ namespace wetter_app_neu_console
                 fh = weatherMapResponse.Main.Temp * 9 / 5 + 32;
                 fh1 = weatherMapResponse.Main.Feels_like * 9 / 5 + 32;
                 fo = weatherMapResponse.Main.Sea_level * 3.2808398950131;
-                Console.WriteLine("In " + weatherMapResponse.Name + " " + "`" + weatherMapResponse.Sys.Country + "`" + " it´s " + 
-                weatherMapResponse.Main.Temp + "°C " + "[" + Math.Round(fh, 2) + "°F]" + "; " + "feels like " + weatherMapResponse.Main.Feels_like + 
-                "°C " + "[" + Math.Round(fh1, 2) + "°F]" + "; "  + "the sea level is " + weatherMapResponse.Main.Sea_level + "m " + "[" + Math.Round(fo, 2) + "ft] \n");
-                Console.WriteLine("Weather condition: " + weatherMapResponse.Weather[0].Description);
+                var table = new Table();
+                AnsiConsole.Markup("[italic blue]For [/]");
+                Console.WriteLine(weatherMapResponse.Name);
+                table.AddColumn("Country");
+                table.AddColumn("Temp in °C");
+                table.AddColumn("Temo in °F");
+                table.AddColumn("Felt temperature in °C");
+                table.AddColumn("Felt temperature in °F");
+                table.AddColumn("Sea level in m");
+                table.AddColumn("Sea level in ft");
+                table.AddColumn("Weather condition");
+                string c_id = weatherMapResponse.Sys.Country;
+                string temp_c = Convert.ToString(weatherMapResponse.Main.Temp);
+                string felt_c = Convert.ToString(weatherMapResponse.Main.Feels_like);
+                string sea_m = Convert.ToString(weatherMapResponse.Main.Sea_level);
+                string wc = Convert.ToString(weatherMapResponse.Weather[0].Description);
+                table.AddRow(c_id, temp_c, Convert.ToString(Math.Round(fh, 2)), felt_c, Convert.ToString(Math.Round(fh1, 2)), sea_m, Convert.ToString(Math.Round(fo, 2)), wc);
+                AnsiConsole.Write(table);
                 if (weatherMapResponse.Main.Temp >= 30)
                 {
                     var warm = "\nNice and warm " + Emoji.Known.Sun;
