@@ -1,5 +1,7 @@
 # c-_console_temp
 
+This is just a small test application, so nothing for serious use.
+
 using Newtonsoft.Json
 (https://github.com/JamesNK/Newtonsoft.Json)
 
