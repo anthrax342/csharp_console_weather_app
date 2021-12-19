@@ -50,7 +50,7 @@ namespace wetter_app_neu_console
                 Console.WriteLine(weatherMapResponse.Name);
                 table.AddColumn("Country");
                 table.AddColumn("Temp in °C");
-                table.AddColumn("Temo in °F");
+                table.AddColumn("Temp in °F");
                 table.AddColumn("Felt temperature in °C");
                 table.AddColumn("Felt temperature in °F");
                 table.AddColumn("Sea level in m");
