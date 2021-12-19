@@ -15,15 +15,21 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -1.6";
+            Console.Title = "Weather App by anthrax3 | c -1.7";
+            var image = new CanvasImage("logo-c-sharp.png");
+            image.MaxWidth(16);
+            AnsiConsole.Write(image);
             string title = @"
-               _   __   
-  ___        / | / /_  
- / __|  _____| || '_ \ 
-| (__  |_____| || (_) |
- \___|       |_(_)___/      
+              _  _____ 
+  ___        / ||___  |
+ / __|  _____| |   / / 
+| (__  |_____| |_ / /  
+ \___|       |_(_)_/   
+                           
                         ";
             Console.WriteLine(title);
+            AnsiConsole.Markup("[italic green]current date: [/]");
+            Console.WriteLine(System.DateTime.Now.ToString("dd.MM.yyyy"));
             AnsiConsole.Markup("[rapidblink blue]Please enter a city[/][rapidblink]:[/] \n");
             Console.ForegroundColor = ConsoleColor.Green;
             string city = Console.ReadLine();
