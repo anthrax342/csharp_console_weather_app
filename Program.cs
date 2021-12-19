@@ -10,18 +10,18 @@ using Spectre.Console;
 namespace wetter_app_neu_console
 {
     internal class Program
-    {   
+    {
+
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -1.5";
+            Console.Title = "Weather App by anthrax3 | c -1.6";
             string title = @"
-              _   ____  
-  ___        / | | ___| 
- / __|  _____| | |___ \ 
-| (__  |_____| |_ ___) |
- \___|       |_(_)____/ 
-                        
+               _   __   
+  ___        / | / /_  
+ / __|  _____| || '_ \ 
+| (__  |_____| || (_) |
+ \___|       |_(_)___/      
                         ";
             Console.WriteLine(title);
             AnsiConsole.Markup("[rapidblink blue]Please enter a city[/][rapidblink]:[/] \n");
@@ -42,9 +42,13 @@ namespace wetter_app_neu_console
                 WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Cyan;
+                double fh, fh1, fo;
+                fh = weatherMapResponse.Main.Temp * 9 / 5 + 32;
+                fh1 = weatherMapResponse.Main.Feels_like * 9 / 5 + 32;
+                fo = weatherMapResponse.Main.Sea_level * 3.2808398950131;
                 Console.WriteLine("In " + weatherMapResponse.Name + " " + "`" + weatherMapResponse.Sys.Country + "`" + " it´s " + 
-                weatherMapResponse.Main.Temp + "°C; " + "feels like " + weatherMapResponse.Main.Feels_like + 
-                "°C; " + "the sea level is " + weatherMapResponse.Main.Sea_level + "m \n");
+                weatherMapResponse.Main.Temp + "°C " + "[" + Math.Round(fh, 2) + "°F]" + "; " + "feels like " + weatherMapResponse.Main.Feels_like + 
+                "°C " + "[" + Math.Round(fh1, 2) + "°F]" + "; "  + "the sea level is " + weatherMapResponse.Main.Sea_level + "m " + "[" + Math.Round(fo, 2) + "ft] \n");
                 Console.WriteLine("Weather condition: " + weatherMapResponse.Weather[0].Description);
                 if (weatherMapResponse.Main.Temp >= 30)
                 {
