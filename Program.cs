@@ -11,18 +11,21 @@ namespace wetter_app_neu_console
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -1.8";
+            Console.Title = "Weather App by anthrax3 | c -1.9";
             var image = new CanvasImage("logo-c-sharp.png");
             image.MaxWidth(16);
             AnsiConsole.Write(image);
             var font = FigletFont.Load("3D-ASCII.flf");
-            AnsiConsole.Write(new FigletText(font,"c -1.8").LeftAligned().Color(Color.Red));
-            AnsiConsole.Markup("[italic green]current date: [/]");
-            Console.WriteLine(System.DateTime.Now.ToString("dd.MM.yyyy"));
+            AnsiConsole.Write(new FigletText(font,"c -1.9").LeftAligned().Color(Color.Red));
+            var panel = new Panel(System.DateTime.Now.ToString("dd.MM.yyyy"));
+            panel.Header("[italic blue] date: [/]");
+            panel.Header.Centered();
+            panel.BorderColor(Color.Red);
+            panel.Border = BoxBorder.Rounded;
+            AnsiConsole.Write(panel);
             AnsiConsole.Markup("[rapidblink blue]Please enter a city[/][rapidblink]:[/] \n");
             Console.ForegroundColor = ConsoleColor.Green;
             string city = Console.ReadLine();
@@ -46,6 +49,7 @@ namespace wetter_app_neu_console
                 fh1 = weatherMapResponse.Main.Feels_like * 9 / 5 + 32;
                 fo = weatherMapResponse.Main.Sea_level * 3.2808398950131;
                 var table = new Table();
+                table.Border = TableBorder.Rounded;
                 AnsiConsole.Markup("[italic blue]For [/]");
                 Console.WriteLine(weatherMapResponse.Name);
                 table.AddColumn("Country");
@@ -63,6 +67,10 @@ namespace wetter_app_neu_console
                 string wc = Convert.ToString(weatherMapResponse.Weather[0].Description);
                 table.AddRow(c_id, temp_c, Convert.ToString(Math.Round(fh, 2)), felt_c, Convert.ToString(Math.Round(fh1, 2)), sea_m, Convert.ToString(Math.Round(fo, 2)), wc);
                 AnsiConsole.Write(table);
+                if (weatherMapResponse.Main.Sea_level == 0)
+                {
+                    AnsiConsole.Markup("[bold blue]The sea level is a bit buggy, if the value is 0 it may be that the actual value is below zero or not available[/].\n");
+                }
                 if (weatherMapResponse.Main.Temp >= 30)
                 {
                     var warm = "\nNice and warm " + Emoji.Known.Sun;
