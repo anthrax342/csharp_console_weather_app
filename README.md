@@ -1,4 +1,4 @@
-# c-_console_temp
+# csharp_console_weather_app
 
 This is just a small test application, so nothing for serious use.
 
