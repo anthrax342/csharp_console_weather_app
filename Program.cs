@@ -14,14 +14,32 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -1.9";
-            var image = new CanvasImage("logo-c-sharp.png");
-            image.MaxWidth(16);
-            AnsiConsole.Write(image);
-            var font = FigletFont.Load("3D-ASCII.flf");
-            AnsiConsole.Write(new FigletText(font,"c -1.9").LeftAligned().Color(Color.Red));
-            var panel = new Panel(System.DateTime.Now.ToString("dd.MM.yyyy"));
-            panel.Header("[italic blue] date: [/]");
+            DateTime from = new DateTime(DateTime.Now.Year,12,24);
+            DateTime to = new DateTime(DateTime.Now.Year, 12, 26);
+            DateTime input = DateTime.Now;
+            if (from <= input & input <= to)
+            {
+                Console.WindowHeight = 42;
+                Console.Title = "Weather App by anthrax3 | c -2.0 🎄";
+                var image = new CanvasImage("logo-c-sharp-xmas.png");
+                image.MaxWidth(16);
+                AnsiConsole.Write(image);
+                var font = FigletFont.Load("3D-ASCII.flf");
+                AnsiConsole.Write(new FigletText(font, "Merry Xmas").LeftAligned().Color(Color.Red));
+            }
+            else
+            {
+                Console.WindowHeight = 30;
+                Console.Title = "Weather App by anthrax3 | c -2.0";
+                var image = new CanvasImage("logo-c-sharp.png");
+                image.MaxWidth(16);
+                AnsiConsole.Write(image);
+                var font = FigletFont.Load("3D-ASCII.flf");
+                AnsiConsole.Write(new FigletText(font, "c -2.0").LeftAligned().Color(Color.Red));
+            }
+            var culture = new System.Globalization.CultureInfo("en-US");
+            var panel = new Panel(culture.DateTimeFormat.GetDayName(DateTime.Now.DayOfWeek) + " / " + System.DateTime.Now.ToString("MM.dd.yyyy"));
+            panel.Header("[italic blue] date (en-US): [/]");
             panel.Header.Centered();
             panel.BorderColor(Color.Red);
             panel.Border = BoxBorder.Rounded;
@@ -73,7 +91,7 @@ namespace wetter_app_neu_console
                 }
                 if (weatherMapResponse.Main.Temp >= 30)
                 {
-                    var warm = "\nNice and warm " + Emoji.Known.Sun;
+                    var warm = "\nNice and warm " + Emoji.Known.Thermometer;
                     AnsiConsole.MarkupLine(warm);
                 }
                 if (weatherMapResponse.Main.Temp <= 0)
