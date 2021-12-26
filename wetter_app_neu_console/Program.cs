@@ -14,6 +14,8 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            //Christmas date verification
             DateTime from = new DateTime(DateTime.Now.Year,12,24);
             DateTime to = new DateTime(DateTime.Now.Year, 12, 26);
             DateTime input = DateTime.Now;
@@ -37,35 +39,51 @@ namespace wetter_app_neu_console
                 var font = FigletFont.Load("3D-ASCII.flf");
                 AnsiConsole.Write(new FigletText(font, "c -2.0").LeftAligned().Color(Color.Red));
             }
+
+            //Date display
             var culture = new System.Globalization.CultureInfo("en-US");
             var panel = new Panel(culture.DateTimeFormat.GetDayName(DateTime.Now.DayOfWeek) + " / " + System.DateTime.Now.ToString("MM.dd.yyyy"));
+
+            //Panel creation with Specter.Console
             panel.Header("[italic blue] date (en-US): [/]");
             panel.Header.Centered();
             panel.BorderColor(Color.Red);
             panel.Border = BoxBorder.Rounded;
             AnsiConsole.Write(panel);
+
+            //command prompt
             AnsiConsole.Markup("[rapidblink blue]Please enter a city[/][rapidblink]:[/] \n");
             Console.ForegroundColor = ConsoleColor.Green;
             string city = Console.ReadLine();
+
+            //Http client generation and api query
             HttpClient client = new HttpClient();
             string requesturl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=7acf7e9cd7f56789fe7911d6576444c8&units=metric";
             HttpResponseMessage httpResponse = client.GetAsync(requesturl).Result;
-            if(client.GetAsync(requesturl).Result.IsSuccessStatusCode == false)
+
+            //result success status
+            if (client.GetAsync(requesturl).Result.IsSuccessStatusCode == false)
             {
+                System.Media.SystemSounds.Beep.Play();
                 Console.Clear();
-                AnsiConsole.Markup("[underline red]Input error, please try again[/]\n");
+                AnsiConsole.Markup("[underline red]Input error! Please try again[/]\n");
                 Main(args);
             }
             else
             {
+                //Conversion of the raw data (Json) into usable results
                 string response = httpResponse.Content.ReadAsStringAsync().Result;
                 WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
+
+                //Conversion from metric to imperial (optional information)
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 double fh, fh1, fo;
                 fh = weatherMapResponse.Main.Temp * 9 / 5 + 32;
                 fh1 = weatherMapResponse.Main.Feels_like * 9 / 5 + 32;
                 fo = weatherMapResponse.Main.Sea_level * 3.2808398950131;
+
+                //Table creation with Specter.Console
                 var table = new Table();
                 table.Border = TableBorder.Rounded;
                 AnsiConsole.Markup("[italic blue]For [/]");
@@ -78,6 +96,8 @@ namespace wetter_app_neu_console
                 table.AddColumn("Sea level in m");
                 table.AddColumn("Sea level in ft");
                 table.AddColumn("Weather condition");
+
+                //Conversion of the data in string for display in the table
                 string c_id = weatherMapResponse.Sys.Country;
                 string temp_c = Convert.ToString(weatherMapResponse.Main.Temp);
                 string felt_c = Convert.ToString(weatherMapResponse.Main.Feels_like);
@@ -85,6 +105,8 @@ namespace wetter_app_neu_console
                 string wc = Convert.ToString(weatherMapResponse.Weather[0].Description);
                 table.AddRow(c_id, temp_c, Convert.ToString(Math.Round(fh, 2)), felt_c, Convert.ToString(Math.Round(fh1, 2)), sea_m, Convert.ToString(Math.Round(fo, 2)), wc);
                 AnsiConsole.Write(table);
+
+                //Minor checks
                 if (weatherMapResponse.Main.Sea_level == 0)
                 {
                     AnsiConsole.Markup("[bold blue]The sea level is a bit buggy, if the value is 0 it may be that the actual value is below zero or not available[/].\n");
@@ -100,6 +122,8 @@ namespace wetter_app_neu_console
                     AnsiConsole.MarkupLine(cold);
                 }
             }
+
+            //Key query
             Console.WriteLine("\nPress E to exit; R to repeat. ");
             ConsoleKey key;
             do
@@ -117,7 +141,10 @@ namespace wetter_app_neu_console
             } while (true);
         }
     }
+
+    //Classes with properties
     class WeatherMapResponse
+    //Query class with city name
     {
         private Main main;
         private Sys sys;
@@ -145,6 +172,7 @@ namespace wetter_app_neu_console
         }
     }
     class Main
+    //Class for temperature, perceived temperature and sea level
     {
         private float temp;
         private float feels_like;
@@ -168,6 +196,7 @@ namespace wetter_app_neu_console
         }
     }
     class Sys
+    //Class for the country
     {
         private string country;
         public string Country
@@ -177,6 +206,7 @@ namespace wetter_app_neu_console
         }
     }
     class Weather
+    //Class for weather description
     {
         private string description;
         public string Description
