@@ -83,7 +83,7 @@ namespace wetter_app_neu_console
                 fh1 = weatherMapResponse.Main.Feels_like * 9 / 5 + 32;
                 fo = weatherMapResponse.Main.Sea_level * 3.2808398950131;
 
-                //Table creation with Specter.Console
+                //Table creation with Spectre.Console
                 var table = new Table();
                 table.Border = TableBorder.Rounded;
                 AnsiConsole.Markup("[italic blue]For [/]");
