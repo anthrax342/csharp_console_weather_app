@@ -44,7 +44,7 @@ namespace wetter_app_neu_console
             var culture = new System.Globalization.CultureInfo("en-US");
             var panel = new Panel(culture.DateTimeFormat.GetDayName(DateTime.Now.DayOfWeek) + " / " + System.DateTime.Now.ToString("MM.dd.yyyy"));
 
-            //Panel creation with Specter.Console
+            //Panel creation with Spectre.Console
             panel.Header("[italic blue] date (en-US): [/]");
             panel.Header.Centered();
             panel.BorderColor(Color.Red);
