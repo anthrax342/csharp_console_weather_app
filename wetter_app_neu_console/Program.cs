@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using Spectre.Console;
 
@@ -11,6 +13,12 @@ namespace wetter_app_neu_console
 {
     internal class Program
     {
+        //test method for the connection test
+        static void second(string[] args)
+        {
+            AnsiConsole.Markup("[underline red]Connection to the owm servers unsuccessful![/]");
+        }
+        //Main
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -22,7 +30,7 @@ namespace wetter_app_neu_console
             if (from <= input & input <= to)
             {
                 Console.WindowHeight = 42;
-                Console.Title = "Weather App by anthrax3 | c -2.0 🎄";
+                Console.Title = "Weather App by anthrax3 | c -2.1 🎄";
                 var image = new CanvasImage("logo-c-sharp-xmas.png");
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
@@ -32,24 +40,42 @@ namespace wetter_app_neu_console
             else
             {
                 Console.WindowHeight = 30;
-                Console.Title = "Weather App by anthrax3 | c -2.0";
+                Console.Title = "Weather App by anthrax3 | c -2.1";
                 var image = new CanvasImage("logo-c-sharp.png");
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
                 var font = FigletFont.Load("3D-ASCII.flf");
-                AnsiConsole.Write(new FigletText(font, "c -2.0").LeftAligned().Color(Color.Red));
+                AnsiConsole.Write(new FigletText(font, "c -2.1").LeftAligned().Color(Color.Red));
             }
 
             //Date display
             var culture = new System.Globalization.CultureInfo("en-US");
             var panel = new Panel(culture.DateTimeFormat.GetDayName(DateTime.Now.DayOfWeek) + " / " + System.DateTime.Now.ToString("MM.dd.yyyy"));
 
-            //Panel creation with Specter.Console
+            //Panel creation with Spectre.Console
             panel.Header("[italic blue] date (en-US): [/]");
             panel.Header.Centered();
             panel.BorderColor(Color.Red);
             panel.Border = BoxBorder.Rounded;
             AnsiConsole.Write(panel);
+
+            //Connection test to the ´owm´ server | if there is no connection there is an error message and the program closes
+            var request = (HttpWebRequest)WebRequest.Create("https://openweathermap.org/");
+            request.UserAgent = "client";
+            request.KeepAlive = false;
+            request.Timeout = 1000;
+
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                if (response.ContentLength == 0 && response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    second(args);
+                }
+                else
+                {
+                    AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
+                }
+            }
 
             //command prompt
             AnsiConsole.Markup("[rapidblink blue]Please enter a city[/][rapidblink]:[/] \n");
@@ -83,11 +109,23 @@ namespace wetter_app_neu_console
                 fh1 = weatherMapResponse.Main.Feels_like * 9 / 5 + 32;
                 fo = weatherMapResponse.Main.Sea_level * 3.2808398950131;
 
-                //Table creation with Specter.Console
+                //Table creation with Spectre.Console
                 var table = new Table();
                 table.Border = TableBorder.Rounded;
                 AnsiConsole.Markup("[italic blue]For [/]");
                 Console.WriteLine(weatherMapResponse.Name);
+
+                    //IP address of the server to be connected
+                    try
+                    {
+                        IPHostEntry hostname = Dns.GetHostEntry("api.openweathermap.org");
+                        IPAddress[] ip = hostname.AddressList;
+                        Console.WriteLine("connected to " + ip[0]);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
                 table.AddColumn("Country");
                 table.AddColumn("Temp in °C");
                 table.AddColumn("Temp in °F");
