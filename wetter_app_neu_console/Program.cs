@@ -12,16 +12,12 @@ using Spectre.Console;
 namespace wetter_app_neu_console
 {
     internal class Program
-    {
-        //test method for the connection test
-        static void second(string[] args)
-        {
-            AnsiConsole.Markup("[underline red]Connection to the owm servers unsuccessful![/]");
-        }
+    {   
         //Main
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Title = "Weather App by anthrax3 | c -2.2";
 
             //Christmas date verification
             DateTime from = new DateTime(DateTime.Now.Year,12,24);
@@ -30,7 +26,6 @@ namespace wetter_app_neu_console
             if (from <= input & input <= to)
             {
                 Console.WindowHeight = 42;
-                Console.Title = "Weather App by anthrax3 | c -2.1 🎄";
                 var image = new CanvasImage("logo-c-sharp-xmas.png");
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
@@ -40,12 +35,11 @@ namespace wetter_app_neu_console
             else
             {
                 Console.WindowHeight = 30;
-                Console.Title = "Weather App by anthrax3 | c -2.1";
                 var image = new CanvasImage("logo-c-sharp.png");
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
                 var font = FigletFont.Load("3D-ASCII.flf");
-                AnsiConsole.Write(new FigletText(font, "c -2.1").LeftAligned().Color(Color.Red));
+                AnsiConsole.Write(new FigletText(font, "c -2.2").LeftAligned().Color(Color.Red));
             }
 
             //Date display
@@ -59,23 +53,32 @@ namespace wetter_app_neu_console
             panel.Border = BoxBorder.Rounded;
             AnsiConsole.Write(panel);
 
-            //Connection test to the ´owm´ server | if there is no connection there is an error message and the program closes
-            var request = (HttpWebRequest)WebRequest.Create("https://openweathermap.org/");
-            request.UserAgent = "client";
-            request.KeepAlive = false;
-            request.Timeout = 1000;
+            //Status display of the running process
+            AnsiConsole.Status()
+                .Start("loading...", ctx =>
+                {
+                    ctx.Spinner(Spinner.Known.Shark);
 
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                if (response.ContentLength == 0 && response.StatusCode == HttpStatusCode.NoContent)
-                {
-                    second(args);
-                }
-                else
-                {
-                    AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
-                }
-            }
+                    //Connection test to the ´owm´ server
+                    var request = (HttpWebRequest)WebRequest.Create("https://openweathermap.org/");
+                    request.UserAgent = "client";
+                    request.KeepAlive = false;
+                    request.Timeout = 5000;
+
+                    using (var response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.ContentLength == 0 && response.StatusCode == HttpStatusCode.NoContent)
+                        {
+                            AnsiConsole.Markup("[underline red]Connection to the owm servers unsuccessful![/]\n");
+                        }
+                        else
+                        {
+                            AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
+                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.2 -- Server Status: " + Convert.ToString(response.StatusCode); 
+                        }
+                    }
+
+                });
 
             //command prompt
             AnsiConsole.Markup("[rapidblink blue]Please enter a city[/][rapidblink]:[/] \n");
@@ -124,7 +127,7 @@ namespace wetter_app_neu_console
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.ToString());
+                        AnsiConsole.WriteException(ex);
                     }
                 table.AddColumn("Country");
                 table.AddColumn("Temp in °C");
