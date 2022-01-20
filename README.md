@@ -12,4 +12,4 @@ using figlet-fonts
 (https://github.com/xero/figlet-fonts)
 
 Note:
-Unfortunately, emojis don't work, maybe I'll fix it in the near future
+Unfortunately, emojis don't work, maybe I'll fix it in the near future. Furthermore, an unwanted error message is displayed during the internet connection test if the connection was not successful.
