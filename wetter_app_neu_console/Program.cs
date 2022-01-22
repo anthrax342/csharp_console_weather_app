@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
-using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using Spectre.Console;
 
@@ -17,7 +13,7 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -2.2";
+            Console.Title = "Weather App by anthrax3 | c -2.3";
 
             //Christmas date verification
             DateTime from = new DateTime(DateTime.Now.Year,12,24);
@@ -39,7 +35,7 @@ namespace wetter_app_neu_console
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
                 var font = FigletFont.Load("3D-ASCII.flf");
-                AnsiConsole.Write(new FigletText(font, "c -2.2").LeftAligned().Color(Color.Red));
+                AnsiConsole.Write(new FigletText(font, "c -2.3").LeftAligned().Color(Color.Red));
             }
 
             //Date display
@@ -74,14 +70,14 @@ namespace wetter_app_neu_console
                         else
                         {
                             AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
-                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.2 -- Server Status: " + Convert.ToString(response.StatusCode); 
+                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.3 -- Server Status: " + Convert.ToString(response.StatusCode); 
                         }
                     }
 
                 });
 
             //command prompt
-            AnsiConsole.Markup("[rapidblink blue]Please enter a city[/][rapidblink]:[/] \n");
+            AnsiConsole.Markup("[rapidblink blue]Please enter a city or a postal code[/][rapidblink]:[/] \n");
             Console.ForegroundColor = ConsoleColor.Green;
             string city = Console.ReadLine();
 
@@ -151,7 +147,16 @@ namespace wetter_app_neu_console
                 if (weatherMapResponse.Main.Sea_level == 0)
                 {
                     AnsiConsole.Markup("[bold blue]The sea level is a bit buggy, if the value is 0 it may be that the actual value is below zero or not available[/].\n");
+                    Console.WriteLine();
                 }
+                    //bar chart for the minimum and maximum temperature
+                    AnsiConsole.Write(new BarChart()
+                        .Width(60)
+                        .Label("[blue bold]minimum[/] and [red bold]maximum[/] temperature in Celsius:\n")
+                        .CenterLabel()
+                        .AddItem("[blue bold]minimum[/]:", Math.Round(weatherMapResponse.Main.Temp_min, 2), Color.Blue)
+                        .AddItem("[red bold]maximum[/]:", Math.Round(weatherMapResponse.Main.Temp_max, 2), Color.Red));
+
                 if (weatherMapResponse.Main.Temp >= 30)
                 {
                     var warm = "\nNice and warm " + Emoji.Known.Thermometer;
@@ -213,11 +218,13 @@ namespace wetter_app_neu_console
         }
     }
     class Main
-    //Class for temperature, perceived temperature and sea level
+    //Class for temperature, perceived temperature, sea level, minimum and maximum temperature
     {
         private float temp;
         private float feels_like;
         private float sea_level;
+        private float temp_min;
+        private float temp_max;
         public float Temp
         {
             get { return temp; }
@@ -234,6 +241,16 @@ namespace wetter_app_neu_console
         {
             get { return sea_level; }
             set { sea_level = value; }
+        }
+        public float Temp_min
+        {
+            get { return temp_min; }
+            set { temp_min = value; }
+        }
+        public float Temp_max
+        {
+            get { return temp_max; }
+            set { temp_max = value; }
         }
     }
     class Sys
