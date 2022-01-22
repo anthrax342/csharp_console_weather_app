@@ -143,31 +143,29 @@ namespace wetter_app_neu_console
                 table.AddRow(c_id, temp_c, Convert.ToString(Math.Round(fh, 2)), felt_c, Convert.ToString(Math.Round(fh1, 2)), sea_m, Convert.ToString(Math.Round(fo, 2)), wc);
                 AnsiConsole.Write(table);
 
-                //Minor checks
-                if (weatherMapResponse.Main.Sea_level == 0)
+                
+                //bar chart for the minimum and maximum temperature + Conversion of sub-zero temperatures into plus degrees for output
+                if (weatherMapResponse.Main.Temp_min < 0)
                 {
-                    AnsiConsole.Markup("[bold blue]The sea level is a bit buggy, if the value is 0 it may be that the actual value is below zero or not available[/].\n");
-                    Console.WriteLine();
+                    weatherMapResponse.Main.Temp_min = -weatherMapResponse.Main.Temp_min;
+                    AnsiConsole.Markup("[italic]the[/] [italic blue]minimun[/] [italic]is minus[/]\n");
                 }
-                    //bar chart for the minimum and maximum temperature
+                if (weatherMapResponse.Main.Temp_max < 0)
+                {
+                    weatherMapResponse.Main.Temp_max = -weatherMapResponse.Main.Temp_max;
+                    AnsiConsole.Markup("[italic]the[/] [italic red]maximum[/] [italic]is minus[/]\n");
+                }
+                Console.WriteLine();
                     AnsiConsole.Write(new BarChart()
-                        .Width(60)
-                        .Label("[blue bold]minimum[/] and [red bold]maximum[/] temperature in Celsius:\n")
-                        .CenterLabel()
-                        .AddItem("[blue bold]minimum[/]:", Math.Round(weatherMapResponse.Main.Temp_min, 2), Color.Blue)
-                        .AddItem("[red bold]maximum[/]:", Math.Round(weatherMapResponse.Main.Temp_max, 2), Color.Red));
-
-                if (weatherMapResponse.Main.Temp >= 30)
-                {
-                    var warm = "\nNice and warm " + Emoji.Known.Thermometer;
-                    AnsiConsole.MarkupLine(warm);
-                }
-                if (weatherMapResponse.Main.Temp <= 0)
-                {
-                    var cold = "\nIt´s pretty cold " + Emoji.Known.Snowflake;
-                    AnsiConsole.MarkupLine(cold);
-                }
+                       .Width(60)
+                       .Label("[blue bold]minimum[/] and [red bold]maximum[/] temperature in Celsius:\n")
+                       .CenterLabel()
+                       .AddItem("[blue bold]minimum[/]:", Math.Round(weatherMapResponse.Main.Temp_min, 2), Color.Blue)
+                       .AddItem("[red bold]maximum[/]:", Math.Round(weatherMapResponse.Main.Temp_max, 2), Color.Red));
             }
+            Console.WriteLine();
+            var line = new Rule();
+            AnsiConsole.Write(line);
 
             //Key query
             Console.WriteLine("\nPress E to exit; R to repeat. ");
