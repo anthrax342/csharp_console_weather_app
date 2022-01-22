@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -13,7 +14,7 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -2.3";
+            Console.Title = "Weather App by anthrax3 | c -2.4";
 
             //Christmas date verification
             DateTime from = new DateTime(DateTime.Now.Year,12,24);
@@ -35,7 +36,7 @@ namespace wetter_app_neu_console
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
                 var font = FigletFont.Load("3D-ASCII.flf");
-                AnsiConsole.Write(new FigletText(font, "c -2.3").LeftAligned().Color(Color.Red));
+                AnsiConsole.Write(new FigletText(font, "c -2.4").LeftAligned().Color(Color.Red));
             }
 
             //Date display
@@ -70,7 +71,7 @@ namespace wetter_app_neu_console
                         else
                         {
                             AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
-                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.3 -- Server Status: " + Convert.ToString(response.StatusCode); 
+                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.4 -- Server Status: " + Convert.ToString(response.StatusCode); 
                         }
                     }
 
@@ -80,6 +81,7 @@ namespace wetter_app_neu_console
             AnsiConsole.Markup("[rapidblink blue]Please enter a city or a postal code[/][rapidblink]:[/] \n");
             Console.ForegroundColor = ConsoleColor.Green;
             string city = Console.ReadLine();
+            Console.WindowHeight = 38;
 
             //Http client generation and api query
             HttpClient client = new HttpClient();
@@ -142,14 +144,21 @@ namespace wetter_app_neu_console
                 string wc = Convert.ToString(weatherMapResponse.Weather[0].Description);
                 table.AddRow(c_id, temp_c, Convert.ToString(Math.Round(fh, 2)), felt_c, Convert.ToString(Math.Round(fh1, 2)), sea_m, Convert.ToString(Math.Round(fo, 2)), wc);
                 AnsiConsole.Write(table);
+                var iconcode = weatherMapResponse.Weather[0].Icon;
+                WebClient wclient = new WebClient();
+                wclient.DownloadFile("http://openweathermap.org/img/w/" + iconcode + ".png", iconcode + ".png");
+                var image = new CanvasImage(iconcode + ".png");
+                image.MaxWidth(16);
+                AnsiConsole.Write(image);
+                File.Delete(iconcode + ".png");
 
-                
+
                 //bar chart for the minimum and maximum temperature + Conversion of sub-zero temperatures into plus degrees for output
                 if (weatherMapResponse.Main.Temp_min < 0)
-                {
-                    weatherMapResponse.Main.Temp_min = -weatherMapResponse.Main.Temp_min;
-                    AnsiConsole.Markup("[italic]the[/] [italic blue]minimun[/] [italic]is minus[/]\n");
-                }
+                    {
+                        weatherMapResponse.Main.Temp_min = -weatherMapResponse.Main.Temp_min;
+                        AnsiConsole.Markup("[italic]the[/] [italic blue]minimun[/] [italic]is minus[/]\n");
+                    }
                 if (weatherMapResponse.Main.Temp_max < 0)
                 {
                     weatherMapResponse.Main.Temp_max = -weatherMapResponse.Main.Temp_max;
@@ -265,10 +274,16 @@ namespace wetter_app_neu_console
     //Class for weather description
     {
         private string description;
+        private string icon;
         public string Description
         {
             get { return description; }
             set { description = value; }
+        }
+        public string Icon
+        {
+            get { return icon; }
+            set { icon = value; }
         }
     }
 }
