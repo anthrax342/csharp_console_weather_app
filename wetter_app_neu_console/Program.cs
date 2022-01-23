@@ -81,7 +81,6 @@ namespace wetter_app_neu_console
             AnsiConsole.Markup("[rapidblink blue]Please enter a city or a postal code[/][rapidblink]:[/] \n");
             Console.ForegroundColor = ConsoleColor.Green;
             string city = Console.ReadLine();
-            Console.WindowHeight = 38;
 
             //Http client generation and api query
             HttpClient client = new HttpClient();
@@ -98,6 +97,7 @@ namespace wetter_app_neu_console
             }
             else
             {
+                Console.WindowHeight = 38;
                 //Conversion of the raw data (Json) into usable results
                 string response = httpResponse.Content.ReadAsStringAsync().Result;
                 WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
