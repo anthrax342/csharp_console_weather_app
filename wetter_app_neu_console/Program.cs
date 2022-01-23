@@ -14,7 +14,7 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -2.4";
+            Console.Title = "Weather App by anthrax3 | c -2.5";
 
             //Christmas date verification
             DateTime from = new DateTime(DateTime.Now.Year,12,24);
@@ -36,7 +36,7 @@ namespace wetter_app_neu_console
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
                 var font = FigletFont.Load("3D-ASCII.flf");
-                AnsiConsole.Write(new FigletText(font, "c -2.4").LeftAligned().Color(Color.Red));
+                AnsiConsole.Write(new FigletText(font, "c -2.5").LeftAligned().Color(Color.Red));
             }
 
             //Date display
@@ -71,7 +71,7 @@ namespace wetter_app_neu_console
                         else
                         {
                             AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
-                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.4 -- Server Status: " + Convert.ToString(response.StatusCode); 
+                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.5 -- Server Status: " + Convert.ToString(response.StatusCode); 
                         }
                     }
 
@@ -97,7 +97,7 @@ namespace wetter_app_neu_console
             }
             else
             {
-                Console.WindowHeight = 38;
+                Console.WindowHeight = 40;
                 //Conversion of the raw data (Json) into usable results
                 string response = httpResponse.Content.ReadAsStringAsync().Result;
                 WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
@@ -105,10 +105,9 @@ namespace wetter_app_neu_console
                 //Conversion from metric to imperial (optional information)
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                double fh, fh1, fo;
+                double fh, fh1;
                 fh = weatherMapResponse.Main.Temp * 9 / 5 + 32;
                 fh1 = weatherMapResponse.Main.Feels_like * 9 / 5 + 32;
-                fo = weatherMapResponse.Main.Sea_level * 3.2808398950131;
 
                 //Table creation with Spectre.Console
                 var table = new Table();
@@ -133,7 +132,7 @@ namespace wetter_app_neu_console
                 table.AddColumn("Felt temperature in °C");
                 table.AddColumn("Felt temperature in °F");
                 table.AddColumn("Sea level in m");
-                table.AddColumn("Sea level in ft");
+                table.AddColumn("Wind speed in m/s");
                 table.AddColumn("Weather condition");
 
                 //Conversion of the data in string for display in the table
@@ -142,8 +141,11 @@ namespace wetter_app_neu_console
                 string felt_c = Convert.ToString(weatherMapResponse.Main.Feels_like);
                 string sea_m = Convert.ToString(weatherMapResponse.Main.Sea_level);
                 string wc = Convert.ToString(weatherMapResponse.Weather[0].Description);
-                table.AddRow(c_id, temp_c, Convert.ToString(Math.Round(fh, 2)), felt_c, Convert.ToString(Math.Round(fh1, 2)), sea_m, Convert.ToString(Math.Round(fo, 2)), wc);
+                string ws = Convert.ToString(weatherMapResponse.Wind.Speed);
+                table.AddRow(c_id, temp_c, Convert.ToString(Math.Round(fh, 2)), felt_c, Convert.ToString(Math.Round(fh1, 2)), sea_m, ws, wc);
                 AnsiConsole.Write(table);
+
+                //output of the weather icon
                 var iconcode = weatherMapResponse.Weather[0].Icon;
                 WebClient wclient = new WebClient();
                 wclient.DownloadFile("http://openweathermap.org/img/w/" + iconcode + ".png", iconcode + ".png");
@@ -153,7 +155,7 @@ namespace wetter_app_neu_console
                 File.Delete(iconcode + ".png");
 
 
-                //bar chart for the minimum and maximum temperature + Conversion of sub-zero temperatures into plus degrees for output
+                //bar chart for the minimum, current and maximum temperature + Conversion of sub-zero temperatures into plus degrees for output
                 if (weatherMapResponse.Main.Temp_min < 0)
                     {
                         weatherMapResponse.Main.Temp_min = -weatherMapResponse.Main.Temp_min;
@@ -164,12 +166,18 @@ namespace wetter_app_neu_console
                     weatherMapResponse.Main.Temp_max = -weatherMapResponse.Main.Temp_max;
                     AnsiConsole.Markup("[italic]the[/] [italic red]maximum[/] [italic]is minus[/]\n");
                 }
+                if (weatherMapResponse.Main.Temp < 0)
+                {
+                    weatherMapResponse.Main.Temp = -weatherMapResponse.Main.Temp;
+                    AnsiConsole.Markup("[italic]the[/] [italic green]current[/] [italic]is minus[/]\n");
+                }
                 Console.WriteLine();
                     AnsiConsole.Write(new BarChart()
                        .Width(60)
-                       .Label("[blue bold]minimum[/] and [red bold]maximum[/] temperature in Celsius:\n")
+                       .Label("[blue bold]minimum[/], [green bold]current[/] and [red bold]maximum[/] temperature in °C:\n")
                        .CenterLabel()
                        .AddItem("[blue bold]minimum[/]:", Math.Round(weatherMapResponse.Main.Temp_min, 2), Color.Blue)
+                       .AddItem("[green bold]current[/]:", Math.Round(weatherMapResponse.Main.Temp, 2), Color.Green)
                        .AddItem("[red bold]maximum[/]:", Math.Round(weatherMapResponse.Main.Temp_max, 2), Color.Red));
             }
             Console.WriteLine();
@@ -203,6 +211,7 @@ namespace wetter_app_neu_console
         private Sys sys;
         private string name;
         private List<Weather> weather;
+        private Wind wind;
         public Main Main
         {
             get { return main; }
@@ -222,6 +231,11 @@ namespace wetter_app_neu_console
         {
             get { return weather; }
             set { weather = value; }
+        }
+        public Wind Wind
+        {
+            get { return wind; }
+            set { wind = value; }
         }
     }
     class Main
@@ -271,7 +285,7 @@ namespace wetter_app_neu_console
         }
     }
     class Weather
-    //Class for weather description
+    //Class for weather description and iconid
     {
         private string description;
         private string icon;
@@ -284,6 +298,17 @@ namespace wetter_app_neu_console
         {
             get { return icon; }
             set { icon = value; }
+        }
+    }
+    class Wind
+    //class for wind speed
+    {
+        private float speed;
+
+        public float Speed
+        {
+            get { return speed; }
+            set { speed = value; }
         }
     }
 }
