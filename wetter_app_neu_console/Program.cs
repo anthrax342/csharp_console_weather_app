@@ -9,12 +9,13 @@ using Spectre.Console;
 namespace wetter_app_neu_console
 {
     internal class Program
-    {   
+    {
+        public static List<string> cities = new List<string>();
         //Main
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -2.5";
+            Console.Title = "Weather App by anthrax3 | c -2.6";
 
             //Christmas date verification
             DateTime from = new DateTime(DateTime.Now.Year,12,24);
@@ -36,7 +37,7 @@ namespace wetter_app_neu_console
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
                 var font = FigletFont.Load("3D-ASCII.flf");
-                AnsiConsole.Write(new FigletText(font, "c -2.5").LeftAligned().Color(Color.Red));
+                AnsiConsole.Write(new FigletText(font, "c -2.6").LeftAligned().Color(Color.Red));
             }
 
             //Date display
@@ -71,7 +72,7 @@ namespace wetter_app_neu_console
                         else
                         {
                             AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
-                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.5 -- Server Status: " + Convert.ToString(response.StatusCode); 
+                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.6 -- Server Status: " + Convert.ToString(response.StatusCode); 
                         }
                     }
 
@@ -114,6 +115,9 @@ namespace wetter_app_neu_console
                 table.Border = TableBorder.Rounded;
                 AnsiConsole.Markup("[italic blue]For [/]");
                 Console.WriteLine(weatherMapResponse.Name);
+
+                string prompt_time = DateTime.Now.ToLongTimeString();
+                cities.Add(weatherMapResponse.Name + " | " + prompt_time);
 
                     //IP address of the server to be connected
                     try
@@ -185,7 +189,7 @@ namespace wetter_app_neu_console
             AnsiConsole.Write(line);
 
             //Key query
-            Console.WriteLine("\nPress E to exit; R to repeat. ");
+            Console.WriteLine("\nPress E to exit; R to repeat; C to show cities that have been entered. ");
             ConsoleKey key;
             do
             {
@@ -198,6 +202,37 @@ namespace wetter_app_neu_console
                     {
                         Console.Clear();
                         Main(args);
+                    }
+                else if (key == ConsoleKey.C)
+                    {
+                        Console.Clear();
+                        Console.WindowHeight = 20;
+
+                        foreach (string s in cities)
+                            {
+                                Console.WriteLine(s);
+                            }
+                        Console.WriteLine("\nPress E to exit; R to repeat; C to clear the list and repeat.");
+
+                        do
+                        {
+                            key = Console.ReadKey(true).Key;
+                        if (key == ConsoleKey.E)
+                        {
+                            Environment.Exit(0);
+                        }
+                        else if (key == ConsoleKey.R)
+                        {
+                            Console.Clear();
+                            Main(args);
+                        }
+                        else if (key == ConsoleKey.C)
+                            {
+                                cities.Clear();
+                                Console.Clear();
+                                Main(args);
+                            }
+                    } while (true);
                     }
             } while (true);
         }
