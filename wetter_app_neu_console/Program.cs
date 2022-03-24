@@ -15,7 +15,7 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -2.6";
+            Console.Title = "Weather App by anthrax3 | c -2.7";
 
             //Christmas date verification
             DateTime from = new DateTime(DateTime.Now.Year,12,24);
@@ -37,7 +37,7 @@ namespace wetter_app_neu_console
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
                 var font = FigletFont.Load("3D-ASCII.flf");
-                AnsiConsole.Write(new FigletText(font, "c -2.6").LeftAligned().Color(Color.Red));
+                AnsiConsole.Write(new FigletText(font, "c -2.7").LeftAligned().Color(Color.Red));
             }
 
             //Date display
@@ -72,7 +72,7 @@ namespace wetter_app_neu_console
                         else
                         {
                             AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
-                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.6 -- Server Status: " + Convert.ToString(response.StatusCode); 
+                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.7 -- Server Status: " + Convert.ToString(response.StatusCode); 
                         }
                     }
 
@@ -189,7 +189,7 @@ namespace wetter_app_neu_console
             AnsiConsole.Write(line);
 
             //Key query
-            Console.WriteLine("\nPress E to exit; R to repeat; C to show cities that have been entered. ");
+            Console.WriteLine("\nPress E to exit; R to repeat; C to show cities that have been entered; X to store the current data in .json.");
             ConsoleKey key;
             do
             {
@@ -212,7 +212,7 @@ namespace wetter_app_neu_console
                             {
                                 Console.WriteLine(s);
                             }
-                        Console.WriteLine("\nPress E to exit; R to repeat; C to clear the list and repeat.");
+                        Console.WriteLine("\nPress E to exit; R to repeat; C to clear the list and repeat; S to store the cities in a .txt");
 
                         do
                         {
@@ -232,8 +232,57 @@ namespace wetter_app_neu_console
                                 Console.Clear();
                                 Main(args);
                             }
+                        else if (key == ConsoleKey.S)
+                        {
+                            try
+                            {
+                                using (var sw = new StreamWriter(@"C:\Users\Admin\Desktop\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + ".txt"))
+                                {
+                                    foreach (var i in cities)
+                                    {
+                                        sw.WriteLine(i);
+                                    }
+                                    AnsiConsole.Markup("[green]successfully saved as .txt on the desktop![/]\n");
+                                }
+                            } catch (Exception ex)
+                            {
+                                AnsiConsole.WriteException(ex);
+                            }
+                        }
                     } while (true);
                     }
+                else if (key == ConsoleKey.X)
+                {
+                    try
+                    {
+                        string response = httpResponse.Content.ReadAsStringAsync().Result;
+                        WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
+
+                        File.WriteAllText(@"C:\Users\Admin\Desktop\" + weatherMapResponse.Name + ".json", httpResponse.Content.ReadAsStringAsync().Result);
+                        Console.Clear();
+                        AnsiConsole.Markup("[green]successfully saved as .json on the desktop![/]\n");
+
+                        Console.WriteLine("\nPress E to exit; R to repeat.");
+
+                        do
+                        {
+                            key = Console.ReadKey(true).Key;
+                            if (key == ConsoleKey.E)
+                            {
+                                Environment.Exit(0);
+                            }
+                            else if (key == ConsoleKey.R)
+                            {
+                                Console.Clear();
+                                Main(args);
+                            }
+                        } while (true);
+                    } catch (Exception ex)
+                    {
+                        AnsiConsole.WriteException(ex);
+                    }
+
+                }
             } while (true);
         }
     }
