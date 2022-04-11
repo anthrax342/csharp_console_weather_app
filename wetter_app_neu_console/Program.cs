@@ -15,7 +15,7 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -2.7";
+            Console.Title = "Weather App by anthrax3 | c -2.7.1";
 
             //Christmas date verification
             DateTime from = new DateTime(DateTime.Now.Year,12,24);
@@ -37,7 +37,7 @@ namespace wetter_app_neu_console
                 image.MaxWidth(16);
                 AnsiConsole.Write(image);
                 var font = FigletFont.Load("3D-ASCII.flf");
-                AnsiConsole.Write(new FigletText(font, "c -2.7").LeftAligned().Color(Color.Red));
+                AnsiConsole.Write(new FigletText(font, "c -2.7.1").LeftAligned().Color(Color.Red));
             }
 
             //Date display
@@ -72,7 +72,7 @@ namespace wetter_app_neu_console
                         else
                         {
                             AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
-                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.7 -- Server Status: " + Convert.ToString(response.StatusCode); 
+                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.7.1 -- Server Status: " + Convert.ToString(response.StatusCode); 
                         }
                     }
 
@@ -236,7 +236,8 @@ namespace wetter_app_neu_console
                         {
                             try
                             {
-                                using (var sw = new StreamWriter(@"C:\Users\Admin\Desktop\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + ".txt"))
+                                string filePath_txt = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), DateTime.Now.ToString("yyyyMMdd_hhmmss") + ".txt");
+                                using (var sw = new StreamWriter(filePath_txt))
                                 {
                                     foreach (var i in cities)
                                     {
@@ -258,7 +259,8 @@ namespace wetter_app_neu_console
                         string response = httpResponse.Content.ReadAsStringAsync().Result;
                         WeatherMapResponse weatherMapResponse = JsonConvert.DeserializeObject<WeatherMapResponse>(response);
 
-                        File.WriteAllText(@"C:\Users\Admin\Desktop\" + weatherMapResponse.Name + ".json", httpResponse.Content.ReadAsStringAsync().Result);
+                        string filePath_json = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), weatherMapResponse.Name + ".json");
+                        File.WriteAllText(filePath_json, httpResponse.Content.ReadAsStringAsync().Result);
                         Console.Clear();
                         AnsiConsole.Markup("[green]successfully saved as .json on the desktop![/]\n");
 
