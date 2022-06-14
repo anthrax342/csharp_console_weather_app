@@ -216,6 +216,21 @@
             <param name="format">A composite format string.</param>
             <param name="args">An array of objects to write.</param>
         </member>
+        <member name="M:Spectre.Console.AnsiConsole.MarkupInterpolated(System.FormattableString)">
+            <summary>
+            Writes the specified markup to the console.
+            <para/>
+            All interpolation holes which contain a string are automatically escaped so you must not call <see cref="M:Spectre.Console.StringExtensions.EscapeMarkup(System.String)"/>.
+            </summary>
+            <example>
+            <code>
+            string input = args[0];
+            string output = Process(input);
+            AnsiConsole.MarkupInterpolated($"[blue]{input}[/] -> [green]{output}[/]");
+            </code>
+            </example>
+            <param name="value">The interpolated string value to write.</param>
+        </member>
         <member name="M:Spectre.Console.AnsiConsole.Markup(System.IFormatProvider,System.String,System.Object[])">
             <summary>
             Writes the specified markup to the console.
@@ -223,6 +238,22 @@
             <param name="provider">An object that supplies culture-specific formatting information.</param>
             <param name="format">A composite format string.</param>
             <param name="args">An array of objects to write.</param>
+        </member>
+        <member name="M:Spectre.Console.AnsiConsole.MarkupInterpolated(System.IFormatProvider,System.FormattableString)">
+            <summary>
+            Writes the specified markup to the console.
+            <para/>
+            All interpolation holes which contain a string are automatically escaped so you must not call <see cref="M:Spectre.Console.StringExtensions.EscapeMarkup(System.String)"/>.
+            </summary>
+            <example>
+            <code>
+            string input = args[0];
+            string output = Process(input);
+            AnsiConsole.MarkupInterpolated(CultureInfo.InvariantCulture, $"[blue]{input}[/] -> [green]{output}[/]");
+            </code>
+            </example>
+            <param name="provider">An object that supplies culture-specific formatting information.</param>
+            <param name="value">The interpolated string value to write.</param>
         </member>
         <member name="M:Spectre.Console.AnsiConsole.MarkupLine(System.String)">
             <summary>
@@ -237,6 +268,21 @@
             <param name="format">A composite format string.</param>
             <param name="args">An array of objects to write.</param>
         </member>
+        <member name="M:Spectre.Console.AnsiConsole.MarkupLineInterpolated(System.FormattableString)">
+            <summary>
+            Writes the specified markup, followed by the current line terminator, to the console.
+            <para/>
+            All interpolation holes which contain a string are automatically escaped so you must not call <see cref="M:Spectre.Console.StringExtensions.EscapeMarkup(System.String)"/>.
+            </summary>
+            <example>
+            <code>
+            string input = args[0];
+            string output = Process(input);
+            AnsiConsole.MarkupLineInterpolated($"[blue]{input}[/] -> [green]{output}[/]");
+            </code>
+            </example>
+            <param name="value">The interpolated string value to write.</param>
+        </member>
         <member name="M:Spectre.Console.AnsiConsole.MarkupLine(System.IFormatProvider,System.String,System.Object[])">
             <summary>
             Writes the specified markup, followed by the current line terminator, to the console.
@@ -244,6 +290,22 @@
             <param name="provider">An object that supplies culture-specific formatting information.</param>
             <param name="format">A composite format string.</param>
             <param name="args">An array of objects to write.</param>
+        </member>
+        <member name="M:Spectre.Console.AnsiConsole.MarkupLineInterpolated(System.IFormatProvider,System.FormattableString)">
+            <summary>
+            Writes the specified markup, followed by the current line terminator, to the console.
+            <para/>
+            All interpolation holes which contain a string are automatically escaped so you must not call <see cref="M:Spectre.Console.StringExtensions.EscapeMarkup(System.String)"/>.
+            </summary>
+            <example>
+            <code>
+            string input = args[0];
+            string output = Process(input);
+            AnsiConsole.MarkupLineInterpolated(CultureInfo.InvariantCulture, $"[blue]{input}[/] -> [green]{output}[/]");
+            </code>
+            </example>
+            <param name="provider">An object that supplies culture-specific formatting information.</param>
+            <param name="value">The interpolated string value to write.</param>
         </member>
         <member name="M:Spectre.Console.AnsiConsole.Progress">
             <summary>
@@ -11847,6 +11909,22 @@
             <param name="format">A composite format string.</param>
             <param name="args">An array of objects to write.</param>
         </member>
+        <member name="M:Spectre.Console.AnsiConsoleExtensions.MarkupInterpolated(Spectre.Console.IAnsiConsole,System.FormattableString)">
+            <summary>
+            Writes the specified markup to the console.
+            <para/>
+            All interpolation holes which contain a string are automatically escaped so you must not call <see cref="M:Spectre.Console.StringExtensions.EscapeMarkup(System.String)"/>.
+            </summary>
+            <example>
+            <code>
+            string input = args[0];
+            string output = Process(input);
+            console.MarkupInterpolated($"[blue]{input}[/] -> [green]{output}[/]");
+            </code>
+            </example>
+            <param name="console">The console to write to.</param>
+            <param name="value">The interpolated string value to write.</param>
+        </member>
         <member name="M:Spectre.Console.AnsiConsoleExtensions.Markup(Spectre.Console.IAnsiConsole,System.IFormatProvider,System.String,System.Object[])">
             <summary>
             Writes the specified markup to the console.
@@ -11855,6 +11933,23 @@
             <param name="provider">An object that supplies culture-specific formatting information.</param>
             <param name="format">A composite format string.</param>
             <param name="args">An array of objects to write.</param>
+        </member>
+        <member name="M:Spectre.Console.AnsiConsoleExtensions.MarkupInterpolated(Spectre.Console.IAnsiConsole,System.IFormatProvider,System.FormattableString)">
+            <summary>
+            Writes the specified markup to the console.
+            <para/>
+            All interpolation holes which contain a string are automatically escaped so you must not call <see cref="M:Spectre.Console.StringExtensions.EscapeMarkup(System.String)"/>.
+            </summary>
+            <example>
+            <code>
+            string input = args[0];
+            string output = Process(input);
+            console.MarkupInterpolated(CultureInfo.InvariantCulture, $"[blue]{input}[/] -> [green]{output}[/]");
+            </code>
+            </example>
+            <param name="console">The console to write to.</param>
+            <param name="provider">An object that supplies culture-specific formatting information.</param>
+            <param name="value">The interpolated string value to write.</param>
         </member>
         <member name="M:Spectre.Console.AnsiConsoleExtensions.Markup(Spectre.Console.IAnsiConsole,System.String)">
             <summary>
@@ -11871,6 +11966,22 @@
             <param name="format">A composite format string.</param>
             <param name="args">An array of objects to write.</param>
         </member>
+        <member name="M:Spectre.Console.AnsiConsoleExtensions.MarkupLineInterpolated(Spectre.Console.IAnsiConsole,System.FormattableString)">
+            <summary>
+            Writes the specified markup, followed by the current line terminator, to the console.
+            <para/>
+            All interpolation holes which contain a string are automatically escaped so you must not call <see cref="M:Spectre.Console.StringExtensions.EscapeMarkup(System.String)"/>.
+            </summary>
+            <example>
+            <code>
+            string input = args[0];
+            string output = Process(input);
+            console.MarkupLineInterpolated($"[blue]{input}[/] -> [green]{output}[/]");
+            </code>
+            </example>
+            <param name="console">The console to write to.</param>
+            <param name="value">The interpolated string value to write.</param>
+        </member>
         <member name="M:Spectre.Console.AnsiConsoleExtensions.MarkupLine(Spectre.Console.IAnsiConsole,System.String)">
             <summary>
             Writes the specified markup, followed by the current line terminator, to the console.
@@ -11886,6 +11997,23 @@
             <param name="provider">An object that supplies culture-specific formatting information.</param>
             <param name="format">A composite format string.</param>
             <param name="args">An array of objects to write.</param>
+        </member>
+        <member name="M:Spectre.Console.AnsiConsoleExtensions.MarkupLineInterpolated(Spectre.Console.IAnsiConsole,System.IFormatProvider,System.FormattableString)">
+            <summary>
+            Writes the specified markup, followed by the current line terminator, to the console.
+            <para/>
+            All interpolation holes which contain a string are automatically escaped so you must not call <see cref="M:Spectre.Console.StringExtensions.EscapeMarkup(System.String)"/>.
+            </summary>
+            <example>
+            <code>
+            string input = args[0];
+            string output = Process(input);
+            console.MarkupLineInterpolated(CultureInfo.InvariantCulture, $"[blue]{input}[/] -> [green]{output}[/]");
+            </code>
+            </example>
+            <param name="console">The console to write to.</param>
+            <param name="provider">An object that supplies culture-specific formatting information.</param>
+            <param name="value">The interpolated string value to write.</param>
         </member>
         <member name="M:Spectre.Console.AnsiConsoleExtensions.Progress(Spectre.Console.IAnsiConsole)">
             <summary>
@@ -14693,6 +14821,75 @@
             <param name="caption">The caption.</param>
             <returns>The same instance so that multiple calls can be chained.</returns>
         </member>
+        <member name="T:Spectre.Console.TextPathExtensions">
+            <summary>
+            Contains extension methods for <see cref="T:Spectre.Console.TextPath"/>.
+            </summary>
+        </member>
+        <member name="M:Spectre.Console.TextPathExtensions.SeparatorStyle(Spectre.Console.TextPath,Spectre.Console.Style)">
+            <summary>
+            Sets the separator style.
+            </summary>
+            <param name="obj">The path.</param>
+            <param name="style">The separator style to set.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Spectre.Console.TextPathExtensions.SeparatorColor(Spectre.Console.TextPath,Spectre.Console.Color)">
+            <summary>
+            Sets the separator color.
+            </summary>
+            <param name="obj">The path.</param>
+            <param name="color">The separator color.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Spectre.Console.TextPathExtensions.RootStyle(Spectre.Console.TextPath,Spectre.Console.Style)">
+            <summary>
+            Sets the root style.
+            </summary>
+            <param name="obj">The path.</param>
+            <param name="style">The root style to set.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Spectre.Console.TextPathExtensions.RootColor(Spectre.Console.TextPath,Spectre.Console.Color)">
+            <summary>
+            Sets the root color.
+            </summary>
+            <param name="obj">The path.</param>
+            <param name="color">The root color.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Spectre.Console.TextPathExtensions.StemStyle(Spectre.Console.TextPath,Spectre.Console.Style)">
+            <summary>
+            Sets the stem style.
+            </summary>
+            <param name="obj">The path.</param>
+            <param name="style">The stem style to set.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Spectre.Console.TextPathExtensions.StemColor(Spectre.Console.TextPath,Spectre.Console.Color)">
+            <summary>
+            Sets the stem color.
+            </summary>
+            <param name="obj">The path.</param>
+            <param name="color">The stem color.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Spectre.Console.TextPathExtensions.LeafStyle(Spectre.Console.TextPath,Spectre.Console.Style)">
+            <summary>
+            Sets the leaf style.
+            </summary>
+            <param name="obj">The path.</param>
+            <param name="style">The stem leaf to set.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Spectre.Console.TextPathExtensions.LeafColor(Spectre.Console.TextPath,Spectre.Console.Color)">
+            <summary>
+            Sets the leaf color.
+            </summary>
+            <param name="obj">The path.</param>
+            <param name="color">The leaf color.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
         <member name="T:Spectre.Console.TreeExtensions">
             <summary>
             Contains extension methods for <see cref="T:Spectre.Console.Tree"/>.
@@ -16726,6 +16923,16 @@
             <param name="choices">The choices to add.</param>
             <returns>The same instance so that multiple calls can be chained.</returns>
         </member>
+        <member name="M:Spectre.Console.MultiSelectionPromptExtensions.AddChoiceGroup``1(Spectre.Console.MultiSelectionPrompt{``0},``0,``0[])">
+            <summary>
+            Adds multiple grouped choices.
+            </summary>
+            <typeparam name="T">The prompt result type.</typeparam>
+            <param name="obj">The prompt.</param>
+            <param name="group">The group.</param>
+            <param name="choices">The choices to add.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
         <member name="M:Spectre.Console.MultiSelectionPromptExtensions.Select``1(Spectre.Console.MultiSelectionPrompt{``0},``0)">
             <summary>
             Marks an item as selected.
@@ -16927,6 +17134,16 @@
             <param name="choices">The choices to add.</param>
             <returns>The same instance so that multiple calls can be chained.</returns>
         </member>
+        <member name="M:Spectre.Console.SelectionPromptExtensions.AddChoiceGroup``1(Spectre.Console.SelectionPrompt{``0},``0,``0[])">
+            <summary>
+            Adds multiple grouped choices.
+            </summary>
+            <typeparam name="T">The prompt result type.</typeparam>
+            <param name="obj">The prompt.</param>
+            <param name="group">The group.</param>
+            <param name="choices">The choices to add.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
         <member name="M:Spectre.Console.SelectionPromptExtensions.Title``1(Spectre.Console.SelectionPrompt{``0},System.String)">
             <summary>
             Sets the title.
@@ -17046,6 +17263,16 @@
         <member name="P:Spectre.Console.TextPrompt`1.Validator">
             <summary>
             Gets or sets the validator.
+            </summary>
+        </member>
+        <member name="P:Spectre.Console.TextPrompt`1.DefaultValueStyle">
+            <summary>
+            Gets or sets the style in which the default value is displayed.
+            </summary>
+        </member>
+        <member name="P:Spectre.Console.TextPrompt`1.ChoicesStyle">
+            <summary>
+            Gets or sets the style in which the list of choices is displayed.
             </summary>
         </member>
         <member name="P:Spectre.Console.TextPrompt`1.DefaultValue">
@@ -17228,6 +17455,24 @@
             <typeparam name="T">The prompt type.</typeparam>
             <param name="obj">The prompt.</param>
             <param name="displaySelector">The function to get a display string for a given choice.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Spectre.Console.TextPromptExtensions.DefaultValueStyle``1(Spectre.Console.TextPrompt{``0},Spectre.Console.Style)">
+            <summary>
+            Sets the style in which the default value is displayed.
+            </summary>
+            <typeparam name="T">The prompt result type.</typeparam>
+            <param name="obj">The prompt.</param>
+            <param name="style">The default value style.</param>
+            <returns>The same instance so that multiple calls can be chained.</returns>
+        </member>
+        <member name="M:Spectre.Console.TextPromptExtensions.ChoicesStyle``1(Spectre.Console.TextPrompt{``0},Spectre.Console.Style)">
+            <summary>
+            Sets the style in which the list of choices is displayed.
+            </summary>
+            <typeparam name="T">The prompt result type.</typeparam>
+            <param name="obj">The prompt.</param>
+            <param name="style">The style to use for displaying the choices.</param>
             <returns>The same instance so that multiple calls can be chained.</returns>
         </member>
         <member name="T:Spectre.Console.ValidationResult">
@@ -18155,6 +18400,15 @@
             Gets or sets the color for non emphasized items.
             </summary>
         </member>
+        <member name="M:Spectre.Console.TypeNameHelper.GetTypeDisplayName(System.Type,System.Boolean,System.Boolean)">
+            <summary>
+            Pretty print a type name.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/>.</param>
+            <param name="fullName"><c>true</c> to print a fully qualified name.</param>
+            <param name="includeGenericParameterNames"><c>true</c> to include generic parameter names.</param>
+            <returns>The pretty printed type name.</returns>
+        </member>
         <member name="T:Spectre.Console.FigletFont">
             <summary>
             Represents a FIGlet font.
@@ -18386,6 +18640,23 @@
         </member>
         <member name="M:Spectre.Console.Markup.Render(Spectre.Console.Rendering.RenderContext,System.Int32)">
             <inheritdoc/>
+        </member>
+        <member name="M:Spectre.Console.Markup.FromInterpolated(System.FormattableString,Spectre.Console.Style)">
+            <summary>
+            Returns a new instance of a Markup widget from an interpolated string.
+            </summary>
+            <param name="value">The interpolated string value to write.</param>
+            <param name="style">The style of the text.</param>
+            <returns>A new markup instance.</returns>
+        </member>
+        <member name="M:Spectre.Console.Markup.FromInterpolated(System.IFormatProvider,System.FormattableString,Spectre.Console.Style)">
+            <summary>
+            Returns a new instance of a Markup widget from an interpolated string.
+            </summary>
+            <param name="provider">The format provider to use.</param>
+            <param name="value">The interpolated string value to write.</param>
+            <param name="style">The style of the text.</param>
+            <returns>A new markup instance.</returns>
         </member>
         <member name="M:Spectre.Console.Markup.Escape(System.String)">
             <summary>
@@ -18957,6 +19228,48 @@
             <inheritdoc/>
         </member>
         <member name="M:Spectre.Console.Text.Render(Spectre.Console.Rendering.RenderContext,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Spectre.Console.TextPath">
+            <summary>
+            Representation of a file system path.
+            </summary>
+        </member>
+        <member name="P:Spectre.Console.TextPath.RootStyle">
+            <summary>
+            Gets or sets the root style.
+            </summary>
+        </member>
+        <member name="P:Spectre.Console.TextPath.SeparatorStyle">
+            <summary>
+            Gets or sets the separator style.
+            </summary>
+        </member>
+        <member name="P:Spectre.Console.TextPath.StemStyle">
+            <summary>
+            Gets or sets the stem style.
+            </summary>
+        </member>
+        <member name="P:Spectre.Console.TextPath.LeafStyle">
+            <summary>
+            Gets or sets the leaf style.
+            </summary>
+        </member>
+        <member name="P:Spectre.Console.TextPath.Alignment">
+            <summary>
+            Gets or sets the alignment.
+            </summary>
+        </member>
+        <member name="M:Spectre.Console.TextPath.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spectre.Console.TextPath"/> class.
+            </summary>
+            <param name="path">The path to render.</param>
+        </member>
+        <member name="M:Spectre.Console.TextPath.Measure(Spectre.Console.Rendering.RenderContext,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Spectre.Console.TextPath.Render(Spectre.Console.Rendering.RenderContext,System.Int32)">
             <inheritdoc/>
         </member>
         <member name="T:Spectre.Console.Tree">

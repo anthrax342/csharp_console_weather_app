@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using Newtonsoft.Json;
 using Spectre.Console;
 
@@ -15,7 +16,7 @@ namespace wetter_app_neu_console
         static void Main(string[] args)
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "Weather App by anthrax3 | c -2.7.1";
+            Console.Title = "Weather App by anthrax3 | c -2.7.2";
 
             //Christmas date verification
             DateTime from = new DateTime(DateTime.Now.Year,12,24);
@@ -31,13 +32,13 @@ namespace wetter_app_neu_console
                 AnsiConsole.Write(new FigletText(font, "Merry Xmas").LeftAligned().Color(Color.Red));
             }
             else
-            {
-                Console.WindowHeight = 30;
-                var image = new CanvasImage("logo-c-sharp.png");
-                image.MaxWidth(16);
-                AnsiConsole.Write(image);
-                var font = FigletFont.Load("3D-ASCII.flf");
-                AnsiConsole.Write(new FigletText(font, "c -2.7.1").LeftAligned().Color(Color.Red));
+            {           
+                        Console.WindowHeight = 30;
+                        var image = new CanvasImage("logo-c-sharp.png");
+                        image.MaxWidth(16);
+                        AnsiConsole.Write(image);
+                        var font = FigletFont.Load("3D-ASCII.flf");
+                        AnsiConsole.Write(new FigletText(font, "c -2.7.2").LeftAligned().Color(Color.Red));
             }
 
             //Date display
@@ -72,7 +73,7 @@ namespace wetter_app_neu_console
                         else
                         {
                             AnsiConsole.Markup("[italic blue]connection to the ´owm´ servers was successful![/]\n");
-                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.7.1 -- Server Status: " + Convert.ToString(response.StatusCode); 
+                            Console.Title = Console.Title = "Weather App by anthrax3 | c -2.7.2 -- Server Status: " + Convert.ToString(response.StatusCode); 
                         }
                     }
 
@@ -130,24 +131,50 @@ namespace wetter_app_neu_console
                     {
                         AnsiConsole.WriteException(ex);
                     }
-                table.AddColumn("Country");
-                table.AddColumn("Temp in °C");
-                table.AddColumn("Temp in °F");
-                table.AddColumn("Felt temperature in °C");
-                table.AddColumn("Felt temperature in °F");
-                table.AddColumn("Sea level in m");
-                table.AddColumn("Wind speed in m/s");
-                table.AddColumn("Weather condition");
+                AnsiConsole.Live(table)
+                    .Start(ctx =>
+                    {
+                        table.AddColumn("Country");
+                        ctx.Refresh();
+                        Thread.Sleep(100);
 
-                //Conversion of the data in string for display in the table
-                string c_id = weatherMapResponse.Sys.Country;
-                string temp_c = Convert.ToString(weatherMapResponse.Main.Temp);
-                string felt_c = Convert.ToString(weatherMapResponse.Main.Feels_like);
-                string sea_m = Convert.ToString(weatherMapResponse.Main.Sea_level);
-                string wc = Convert.ToString(weatherMapResponse.Weather[0].Description);
-                string ws = Convert.ToString(weatherMapResponse.Wind.Speed);
-                table.AddRow(c_id, temp_c, Convert.ToString(Math.Round(fh, 2)), felt_c, Convert.ToString(Math.Round(fh1, 2)), sea_m, ws, wc);
-                AnsiConsole.Write(table);
+                        table.AddColumn("Temp in °C");
+                        ctx.Refresh();
+                        Thread.Sleep(100);
+
+                        table.AddColumn("Temp in °F");
+                        ctx.Refresh();
+                        Thread.Sleep(100);
+
+                        table.AddColumn("Felt temperature in °C");
+                        ctx.Refresh();
+                        Thread.Sleep(100);
+
+                        table.AddColumn("Felt temperature in °F");
+                        ctx.Refresh();
+                        Thread.Sleep(100);
+
+                        table.AddColumn("Sea level in m");
+                        ctx.Refresh();
+                        Thread.Sleep(100);
+
+                        table.AddColumn("Wind speed in m/s");
+                        ctx.Refresh();
+                        Thread.Sleep(100);
+
+                        table.AddColumn("Weather condition");
+                        ctx.Refresh();
+                        Thread.Sleep(100);
+
+                        //Conversion of the data in string for display in the table
+                        string c_id = weatherMapResponse.Sys.Country;
+                        string temp_c = Convert.ToString(weatherMapResponse.Main.Temp);
+                        string felt_c = Convert.ToString(weatherMapResponse.Main.Feels_like);
+                        string sea_m = Convert.ToString(weatherMapResponse.Main.Sea_level);
+                        string wc = Convert.ToString(weatherMapResponse.Weather[0].Description);
+                        string ws = Convert.ToString(weatherMapResponse.Wind.Speed);
+                        table.AddRow(c_id, temp_c, Convert.ToString(Math.Round(fh, 2)), felt_c, Convert.ToString(Math.Round(fh1, 2)), sea_m, ws, wc);
+                    });         
 
                 //output of the weather icon
                 var iconcode = weatherMapResponse.Weather[0].Icon;
@@ -243,7 +270,13 @@ namespace wetter_app_neu_console
                                     {
                                         sw.WriteLine(i);
                                     }
+                                    var path = new TextPath(filePath_txt);
+                                    path.RootStyle = new Style(foreground: Color.Gold1);
+                                    path.SeparatorStyle = new Style(foreground: Color.Red);
+                                    path.StemStyle = new Style(foreground: Color.Red);
+                                    path.LeafStyle = new Style(foreground: Color.Green);
                                     AnsiConsole.Markup("[green]successfully saved as .txt on the desktop![/]\n");
+                                    AnsiConsole.Write(path);
                                 }
                             } catch (Exception ex)
                             {
@@ -262,7 +295,13 @@ namespace wetter_app_neu_console
                         string filePath_json = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), weatherMapResponse.Name + ".json");
                         File.WriteAllText(filePath_json, httpResponse.Content.ReadAsStringAsync().Result);
                         Console.Clear();
+                        var path = new TextPath(filePath_json);
+                        path.RootStyle = new Style(foreground: Color.Gold1);
+                        path.SeparatorStyle = new Style(foreground: Color.Red);
+                        path.StemStyle = new Style(foreground: Color.Red);
+                        path.LeafStyle = new Style(foreground: Color.Green);
                         AnsiConsole.Markup("[green]successfully saved as .json on the desktop![/]\n");
+                        AnsiConsole.Write(path);
 
                         Console.WriteLine("\nPress E to exit; R to repeat.");
 
